@@ -24,6 +24,13 @@ local postfix = require("luasnip.extras.postfix").postfix
 local types = require("luasnip.util.types")
 local parse = require("luasnip.util.parser").parse_snippet
 
+-- local function copy(obj)
+--     if type(obj) ~= 'table' then return obj end
+--     local res = {}
+--     for k, v in pairs(obj) do res[copy(k)] = copy(v) end
+--     return res
+-- end
+
 local get_visual = function(_, parent)
     if (#parent.snippet.env.SELECT_RAW > 0) then
         return sn(nil, i(1, parent.snippet.env.SELECT_RAW))
@@ -33,6 +40,35 @@ local get_visual = function(_, parent)
 end
 
 local line_begin = require("luasnip.extras.expand_conditions").line_begin
+
+local multi_trigger_snippet = function(contexts, nodes, opts)
+    local snippets = {}
+    for _, context in pairs(contexts) do
+        table.insert(snippets,
+            vim.deepcopy(s(context, nodes, opts))
+        )
+    end
+    return snippets
+end
+
+-- return a new array containing the concatenation of all of its
+-- parameters. Scaler parameters are included in place, and array
+-- parameters have their values shallow-copied to the final array.
+-- Note that userdata and function values are treated as scalar.
+local array_concat = function(...)
+    local t = {}
+    for n = 1, select("#", ...) do
+        local arg = select(n, ...)
+        if type(arg) == "table" then
+            for _, v in ipairs(arg) do
+                t[#t + 1] = v
+            end
+        else
+            t[#t + 1] = arg
+        end
+    end
+    return t
+end
 
 -- Some LaTeX-specific conditional expansion functions (requires VimTeX)
 
@@ -86,10 +122,13 @@ local mat = function(args, snip)
     return sn(nil, nodes)
 end
 
-return {
-
-    -- mathmode on 'mm'
-    s({ trig = "([%W]*)mm", wordTrig = false, regTrig = true, snippetType = "autosnippet" },
+return array_concat(
+-- mathmode on 'mm'
+    multi_trigger_snippet(
+        {
+            { trig = "([^%w])mm", wordTrig = false, regTrig = true, snippetType = "autosnippet" },
+            { trig = "^(a?)mm", wordTrig = false, regTrig = true, snippetType = "autosnippet" }
+        },
         fmta(
             "<>$<>$",
             {
@@ -100,20 +139,30 @@ return {
         { condition = tex_utils.in_text }
     ),
     -- displaymath on 'dmm'
-    s({ trig = "([^%a])dmm", wordTrig = false, regTrig = true, snippetType = "autosnippet" },
+    multi_trigger_snippet(
+        {
+            { trig = "([^%w])dmm", wordTrig = false, regTrig = true, snippetType = "autosnippet" },
+            { trig = "^(a?)dmm", wordTrig = false, regTrig = true, snippetType = "autosnippet" },
+        },
         fmta([[
-                <>\\[
-                    <>
-                \\]
+            <>\[
+                <>
+            \]
             ]],
             {
                 f(function(_, snip) return snip.captures[1] end),
                 i(1),
-            }),
+            }
+        ),
         { condition = tex_utils.in_text }
+
     ),
     -- fraction on 'ff'
-    s({ trig = "([%s]*)ff", wordTrig = false, regTrig = true, snippetType = "autosnippet" },
+    multi_trigger_snippet(
+        {
+            { trig = "([^%w])ff", wordTrig = false, regTrig = true, snippetType = "autosnippet" },
+            { trig = "^(a?)ff", wordTrig = false, regTrig = true, snippetType = "autosnippet" }
+        },
         fmta("<>\\frac{<>}{<>}",
             {
                 f(function(_, snip) return snip.captures[1] end),
@@ -123,55 +172,43 @@ return {
         ),
         { condition = tex_utils.in_mathzone }
     ),
-    -- 2x2 matrix on 'mx2'
-    s({ trig = "([^%a]*)mx2", wordTrig = false, regTrig = true, snippetType = "autosnippet" },
-        fmta(
-            "<>\\begin{pmatrix} <> & <> \\\\ <> & <> \\end{pmatrix}",
-            {
-                f(function(_, snip) return snip.captures[1] end),
-                i(1),
-                i(2),
-                i(3),
-                i(4)
-            }
-        ),
-        { condition = tex_utils.in_mathzone }
-    ),
-    -- begin environment
-    s({ trig = "env", snippetType = "autosnippet" },
-        fmta(
-            [[
+
+    {
+        -- begin environment
+        s({ trig = "env", snippetType = "autosnippet" },
+            fmta(
+                [[
                 \begin{<>}
                     <>
                 \end{<>}
-            ]],
-            {
-                i(1),
-                i(2),
-                rep(1),
-            }
+            ]]   ,
+                {
+                    i(1),
+                    i(2),
+                    rep(1),
+                }
+            ),
+            { condition = line_begin }
         ),
-        { condition = line_begin }
-    ),
-    -- matrix
-    s({ trig = '([bBpvV])mat(%d+)x(%d+)([a]?)([i]?)', regTrig = true, name = 'matrix', dscr = 'matrix trigger lets go' }
-        ,
-        fmt([[
-    \begin{<>}<>
-    <>
-    \end{<>}]],
-            { f(function(_, snip) return snip.captures[1] .. "matrix" end),
-                f(function(_, snip) -- augments
-                    if snip.captures[4] == "a" then
-                        local out = string.rep("c", tonumber(snip.captures[3]) - 1)
-                        return "[" .. out .. "|c]"
-                    end
-                    return ""
-                end),
-                d(1, mat),
-                f(function(_, snip) return snip.captures[1] .. "matrix" end) },
-            { delimiters = '<>' }
+        -- matrix
+        s({ trig = '([bBpvV])mat(%d+)x(%d+)([a]?)([i]?)', regTrig = true, name = 'matrix',
+            dscr = 'matrix trigger lets go' }
+            ,
+            fmta([[
+                \begin{<>}<>
+                <>
+                \end{<>}]],
+                { f(function(_, snip) return snip.captures[1] .. "matrix" end),
+                    f(function(_, snip) -- augments
+                        if snip.captures[4] == "a" then
+                            local out = string.rep("c", tonumber(snip.captures[3]) - 1)
+                            return "[" .. out .. "|c]"
+                        end
+                        return ""
+                    end),
+                    d(1, mat),
+                    f(function(_, snip) return snip.captures[1] .. "matrix" end) }
+            )
         )
-    ),
-
-}
+    }
+)
