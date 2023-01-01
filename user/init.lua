@@ -266,17 +266,17 @@ local config = {
                         '<Cmd>lua require("luasnip.loaders.from_lua").load({paths = "~/.config/astronvim/lua/user/luasnippets/"})<CR>')
 
                     vim.cmd([[
-                                                    " Expand snippets in insert mode with Tab
-                                                    imap <silent><expr> <Tab> luasnip#expandable() ? '<Plug>luasnip-expand-snippet' : '<Tab>'
+                    " Expand snippets in insert mode with Tab
+                    imap <silent><expr> <Tab> luasnip#expandable() ? '<Plug>luasnip-expand-snippet' : '<Tab>'
 
-                                                    " Jump forward in through tabstops in insert and visual mode with Control-f
-                                                    imap <silent><expr> jl luasnip#jumpable(1) ? '<Plug>luasnip-jump-next' : 'jl'
-                                                    smap <silent><expr> jl luasnip#jumpable(1) ? '<Plug>luasnip-jump-next' : 'jl'
+                    " Jump forward in through tabstops in insert and visual mode with Control-f
+                    imap <silent><expr> jl luasnip#jumpable(1) ? '<Plug>luasnip-jump-next' : 'jl'
+                    smap <silent><expr> jl luasnip#jumpable(1) ? '<Plug>luasnip-jump-next' : 'jl'
 
-                                                    " Jump backward through snippet tabstops with Shift-Tab (for example)
-                                                    imap <silent><expr> jo luasnip#jumpable(-1) ? '<Plug>luasnip-jump-prev' : 'jo'
-                                                    smap <silent><expr> jo luasnip#jumpable(-1) ? '<Plug>luasnip-jump-prev' : 'jo'
-                                                    ]])
+                    " Jump backward through snippet tabstops with Shift-Tab (for example)
+                    imap <silent><expr> jo luasnip#jumpable(-1) ? '<Plug>luasnip-jump-prev' : 'jo'
+                    smap <silent><expr> jo luasnip#jumpable(-1) ? '<Plug>luasnip-jump-prev' : 'jo'
+                    ]])
                 end
             },
         },
