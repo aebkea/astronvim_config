@@ -52,6 +52,7 @@ local config = {
         },
         g = {
             mapleader = " ", -- sets vim.g.mapleader
+            maplocalleader = ",",
             autoformat_enabled = true, -- enable or disable auto formatting at start (lsp.formatting.format_on_save must be enabled)
             cmp_enabled = true, -- enable completion at start
             autopairs_enabled = true, -- enable autopairs at start
