@@ -279,6 +279,18 @@ local config = {
                 end,
                 ft = { "markdown" }
             },
+            ["vimwiki/vimwiki"] = {
+                config = function()
+                    vim.g.vimwiki_global_ext = 0
+                    vim.g.vimwiki_markdown_ext = 1
+                    vim.g.vimwiki_list = { {
+                        ["path"] = "~/Documents/notes/",
+                        ["syntax"] = "markdown",
+                        ["ext"] = ".md",
+                        ["custom_wiki2html"] = "~/.config/astronvim/lua/user/wiki2html.sh"
+                    } }
+                end
+            },
             ["L3MON4D3/LuaSnip"] = {
                 config = function()
                     -- require("configs.luasnip")
