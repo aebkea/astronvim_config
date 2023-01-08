@@ -280,6 +280,9 @@ local config = {
                 ft = { "markdown" }
             },
             ["vimwiki/vimwiki"] = {
+                setup = function()
+                    vim.g.vimwiki_map_prefix = "<LocalLeader>w"
+                end,
                 config = function()
                     vim.g.vimwiki_global_ext = 0
                     vim.g.vimwiki_markdown_ext = 1
