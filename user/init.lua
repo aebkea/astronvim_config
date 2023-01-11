@@ -268,7 +268,14 @@ local config = {
                     }
                 end,
             },
-            ["vim-pandoc/vim-pandoc"] = {},
+            ["vim-pandoc/vim-pandoc"] = {
+                config = function()
+                    vim.g["pandoc#filetypes#handled"] = { "pandoc", "markdown", "vimwiki" }
+                    -- vim.g["pandoc#folding#mode"] = "syntax"
+                    -- vim.g["pandoc#modules#enabled"] = { "folding" }
+                end,
+                after = "vimwiki"
+            },
             ["vim-pandoc/vim-pandoc-syntax"] = {},
             ["iamcco/markdown-preview.nvim"] = {
                 run = function()
@@ -336,6 +343,15 @@ local config = {
                     imap <silent><expr> jo luasnip#jumpable(-1) ? '<Plug>luasnip-jump-prev' : 'jo'
                     smap <silent><expr> jo luasnip#jumpable(-1) ? '<Plug>luasnip-jump-prev' : 'jo'
                     ]])
+                end
+            },
+            ["hrsh7th/nvim-cmp"] = {
+                config = function()
+                    require("configs.cmp")
+
+                    require("cmp").setup.filetype({ 'vimwiki' }, {
+                        enabled = false
+                    })
                 end
             },
         },
