@@ -61,7 +61,7 @@ local config = {
             status_diagnostics_enabled = true, -- enable diagnostics in statusline
             icons_enabled = true, -- disable icons in the UI (disable if no nerd font is available, requires :PackerSync after changing)
             ui_notifications_enabled = true, -- disable notifications when toggling UI elements
-            heirline_bufferline = false, -- enable new heirline based bufferline (requires :PackerSync after changing)
+            heirline_bufferline = true, -- enable new heirline based bufferline (requires :PackerSync after changing)
         },
     },
     -- If you need more control, you can use the function()...end notation
@@ -429,9 +429,9 @@ local config = {
     -- Customize Heirline options
     heirline = {
         -- -- Customize different separators between sections
-        -- separators = {
-        --   tab = { "", "" },
-        -- },
+        separators = {
+            tab = { "", "" },
+        },
         -- -- Customize colors for each element each element has a `_fg` and a `_bg`
         -- colors = function(colors)
         --   colors.git_branch_fg = astronvim.get_hlgroup "Conditional"
