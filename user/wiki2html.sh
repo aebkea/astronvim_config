@@ -17,4 +17,4 @@ CSSFILENAME=$(basename "$6")
 
 STYLEPATH=$(echo "$ROOTPATH$CSSFILENAME" | sed "s/-//g")
 
-sed -r 's/(\[.+\])\(([^)]+)\)/\1(\2.html)/g' <"$INPUT" | pandoc --katex -s -f $SYNTAX -t html -c $STYLEPATH | sed -r 's/<li>(.*)\[ \]/<li class="todo done0">\1/g; s/<li>(.*)\[X\]/<li class="todo done4">\1/g' >"$OUTPUT.html"
+sed -r 's/(\[.+\])\(([^)]+)\)/\1(\2.html)/g' <"$INPUT" | pandoc --katex -s -f $SYNTAX -t html -c $STYLEPATH >"$OUTPUT.html"
