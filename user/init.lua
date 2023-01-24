@@ -27,6 +27,7 @@ local config = {
 
     -- Set colorscheme to use
     colorscheme = "default_theme",
+    -- colorscheme = "sonokai",
 
     -- Add highlight groups in any theme
     highlights = {
@@ -354,6 +355,12 @@ local config = {
                     })
                 end
             },
+            -- ["sainnhe/sonokai"] = {
+            --     as = "sonokai",
+            --     config = function()
+            --         vim.cmd "colorscheme sonokai"
+            --     end,
+            -- }
         },
         -- All other entries override the require("<key>").setup({...}) call for default plugins
         ["null-ls"] = function(config) -- overrides `require("null-ls").setup(config)`
