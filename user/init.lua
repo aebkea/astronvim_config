@@ -547,10 +547,10 @@ local config = {
     icons = {
         VimIcon = "",
         ScrollText = "",
-        GitBranch = "",
-        GitAdd = "",
-        GitChange = "",
-        GitDelete = "",
+        -- GitBranch = "",
+        -- GitAdd = "",
+        -- GitChange = "",
+        -- GitDelete = "",
     },
     heirline = {
         -- Customize different separators between sections
