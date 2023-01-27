@@ -291,6 +291,7 @@ local config = {
                 -- setup = function()
                 --     vim.g.vimwiki_map_prefix = "<LocalLeader>w"
                 -- end,
+                commit = "7cfc3ee",
                 config = function()
                     vim.g.vimwiki_global_ext = 0
                     -- vim.g.vimwiki_markdown_ext = 1
