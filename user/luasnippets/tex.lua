@@ -151,7 +151,7 @@ return array_concat(
             ]],
             {
                 f(function(_, snip) return snip.captures[1] end),
-                i(1),
+                i(0),
             }
         ),
         { condition = tex_utils.in_text }
@@ -184,7 +184,7 @@ return array_concat(
             ]]   ,
                 {
                     i(1),
-                    i(2),
+                    i(0),
                     rep(1),
                 }
             ),
