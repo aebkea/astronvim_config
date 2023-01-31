@@ -465,6 +465,7 @@ local config = {
                 -- fill the rest of the statusline
                 -- the elements after this will appear in the middle of the statusline
                 astronvim.status.component.fill(),
+                astronvim.status.component.cmd_info(),
                 -- add a component to display if the LSP is loading, disable showing running client names, and use no separator
                 astronvim.status.component.lsp { lsp_client_names = false,
                     surround = { separator = "none", color = "bg" } },
